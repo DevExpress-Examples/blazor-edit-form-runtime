@@ -1,0 +1,157 @@
+﻿@page "/"
+
+@using DxBlazorApplication1.Data
+@using System.Linq.Expressions
+@using System.ComponentModel.DataAnnotations
+
+<h2>Edit Form</h2>
+
+<div class="card cw-480">
+    <EditForm Model="@Data"
+              OnValidSubmit="@HandleValidSubmit"
+              OnInvalidSubmit="@HandleInvalidSubmit"
+              Context="EditFormContext">
+        <DataAnnotationsValidator />
+        <div class="card-header text-center py-3">
+            <h4>Register to DevExpress</h4>
+            <p class="tm-8 mb-0 fw-normal fs-825">
+                Create a new account to see it in action
+            </p>
+        </div>
+        <div class="card-body">
+            @CreateEditFormFields()
+        </div>
+    </EditForm>
+</div>
+<p class="tm-8 cw-480 mt-2">
+    @FormSubmitResult
+</p>
+
+@code {
+    string FormSubmitResult = "";
+    UserData Data { get; set; } = new UserData();
+
+    string PhoneMask { get; set; } = "(999)000-0000";
+
+    void HandleValidSubmit()
+    {
+        FormSubmitResult = "You have been registred successully.";
+    }
+    void HandleInvalidSubmit()
+    {
+        FormSubmitResult = "Please correct all errors";
+    }
+
+    public RenderFragment CreateEditFormFields() => formLayoutBuilder =>
+    {
+        var propertyList = typeof(UserData).GetProperties();
+        formLayoutBuilder.OpenComponent<DxFormLayout>(0);
+        formLayoutBuilder.AddAttribute(1, "ChildContent", (RenderFragment)((layoutItemBuilder) =>
+        {
+            int i = 0;
+            foreach (var property in propertyList)
+            {
+
+                var attrList = (DataTypeAttribute)property.GetCustomAttributes(typeof(DataTypeAttribute), false).First();
+                DisplayAttribute displayLabel = (DisplayAttribute)property.GetCustomAttributes(typeof(DisplayAttribute), false).First();
+                layoutItemBuilder.OpenComponent<DxFormLayoutItem>(i++);
+                layoutItemBuilder.AddAttribute(i++, "Caption", displayLabel.Name);
+                layoutItemBuilder.AddAttribute(i++, "ColSpanMd", 12);
+                var access = Expression.Property(Expression.Constant(Data), property.Name);
+                var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(property.PropertyType), access);
+                layoutItemBuilder.AddAttribute(i++, "Template", (RenderFragment<Object>)((context) => ((editor) =>
+                {
+                    var j = 0;
+                    switch (attrList.DataType)
+                    {
+                        case DataType.Text:
+                            {
+                                editor.OpenComponent<DxTextBox>(j++);
+                                editor.AddAttribute(j++, "Text", property.GetValue(Data));
+                                editor.AddAttribute(j++, "TextExpression", lambda);
+                                editor.AddAttribute(j++, "TextChanged", EventCallback.Factory.Create<System.String>(this, str => { property.SetValue(Data, str); }));
+                                editor.CloseComponent();
+                                break;
+                            }
+                        case DataType.Password:
+                            {
+
+                                editor.OpenComponent<DxTextBox>(j++);
+                                editor.AddAttribute(j++, "Password", true);
+                                editor.AddAttribute(j++, "NullText", "Password");
+                                editor.AddAttribute(j++, "Text", property.GetValue(Data));
+                                editor.AddAttribute(j++, "TextExpression", lambda);
+                                editor.AddAttribute(j++, "TextChanged", EventCallback.Factory.Create<System.String>(this, str => { property.SetValue(Data, str); }));
+                                editor.CloseComponent();
+                                break;
+                            }
+                        case DataType.PhoneNumber:
+                            {
+                                editor.OpenComponent<DxMaskedInput<String>>(j++);
+                                editor.AddAttribute(j++, "Value", property.GetValue(Data));
+                                editor.AddAttribute(j++, "Mask", PhoneMask);
+                                editor.AddAttribute(j++, "ValueExpression", lambda);
+                                editor.AddAttribute(j++, "ValueChanged", EventCallback.Factory.Create<System.String>(this, str => { property.SetValue(Data, str); }));
+                                editor.CloseComponent();
+                                break;
+                            }
+                        case DataType.Date:
+                            {
+                                editor.OpenComponent<DxDateEdit<DateTime>>(j);
+                                editor.AddAttribute(j++, "Date",  property.GetValue(Data));
+                                editor.AddAttribute(j++, "DateExpression", lambda);
+                                editor.AddAttribute(j++, "DateChanged", EventCallback.Factory.Create<System.DateTime>(this, str => { property.SetValue(Data, str); }));
+                                editor.CloseComponent();
+                                break;
+
+                            }
+                        case DataType.Custom:
+                            {
+                                editor.OpenComponent<DxComboBox<String, String>>(j);
+                                editor.AddAttribute(j++, "Data", AdditionalData.Occupations);
+                                editor.AddAttribute(j++, "Value", property.GetValue(Data));
+                                editor.AddAttribute(j++, "ValueExpression", lambda);
+                                editor.AddAttribute(j++, "ValueChanged", EventCallback.Factory.Create<System.String>(this, str => { property.SetValue(Data, str); }));
+                                editor.CloseComponent();
+                                break;
+
+                            }
+                        case DataType.MultilineText:
+                            {
+                                editor.OpenComponent<DxMemo>(j);
+                                editor.AddAttribute(j++, "Text", property.GetValue(Data));                                
+                                editor.AddAttribute(j++, "TextExpression", lambda);
+                                editor.AddAttribute(j++, "TextChanged", EventCallback.Factory.Create<System.String>(this, str => { property.SetValue(Data, str); }));
+                                editor.CloseComponent();
+                                break;
+
+                            }
+                        default:
+                            break;
+                    }
+                })));
+
+                layoutItemBuilder.CloseComponent();
+                layoutItemBuilder.OpenElement(i++, "div");
+                layoutItemBuilder.AddAttribute(i++, "class", "text-danger");
+                layoutItemBuilder.OpenComponent(i++, typeof(ValidationMessage<>).MakeGenericType(property.PropertyType));
+                layoutItemBuilder.AddAttribute(i++, "For", lambda);
+                layoutItemBuilder.CloseComponent();
+                layoutItemBuilder.CloseElement();
+            }
+            layoutItemBuilder.OpenComponent<DxFormLayoutItem>(i++);
+            layoutItemBuilder.AddAttribute(i++, "Template", (RenderFragment<Object>)((context) => ((editor) =>
+            {
+
+                editor.OpenComponent<DxButton>(i++);
+                editor.AddAttribute(i++, "SubmitFormOnClick", true);
+                editor.AddAttribute(i++, "Text", "Register");
+                editor.CloseComponent();
+            })));
+
+            layoutItemBuilder.CloseComponent();
+        }));
+        formLayoutBuilder.CloseComponent();
+    };
+
+}

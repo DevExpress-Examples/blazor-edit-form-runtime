@@ -1,8 +1,8 @@
 <!-- default file list -->
 *Files to look at*:
 
-* [UserData.cs](./EditFormRuntime/DxBlazorApplication1/DxBlazorApplication1/Data/UserData.cs)
-* [Index.razor](./EditFormRuntime/DxBlazorApplication1/DxBlazorApplication1/Pages/Index.razor)
+* [UserData.cs](./DxBlazorApplication1/DxBlazorApplication1/Data/UserData.cs)
+* [Index.razor](./DxBlazorApplication1/DxBlazorApplication1/Pages/Index.razor)
 <!-- default file list end -->
 # Blazor Editors - How to create editors dynamically based on a data object
 
