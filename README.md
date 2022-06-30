@@ -1,25 +1,13 @@
-# Product/Platform - Task
+<!-- default file list -->
+*Files to look at*:
 
-This is the repository template for creating new examples. Describe the solved task here.
+* [UserData.cs](./EditFormRuntime/DxBlazorApplication1/DxBlazorApplication1/Data/UserData.cs)
+* [Index.razor](./EditFormRuntime/DxBlazorApplication1/DxBlazorApplication1/Pages/Index.razor)
+<!-- default file list end -->
+# Blazor Editors - How to create editors dynamically based on a data object
 
-Put a screenshot that illustrates the result here.
+<p>The sample illustrates how to create editors dynamically in EditForm. In the sample, DxFormLayout is created and its layout items with Blazor DevExpress Editors are created dynamically based on data object properties and attributes of these properties.</p>
 
-Then, add implementation details (steps, code snippets, and other technical information in a free form), or add a link to an existing document with implementation details. 
+<br/>
 
-## Files to Look At
 
-- link.cs (VB: link.vb)
-- link.js
-- ...
-
-## Documentation
-
-- link
-- link
-- ...
-
-## More Examples
-
-- link
-- link
-- ...
