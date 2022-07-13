@@ -10,25 +10,27 @@ namespace DxBlazorApplication1.Data
         [DataType(DataType.Text)]
         [Display(Name = "User Name")]
         public string Username { get; set; }
+        
         [Required(ErrorMessage = "The Password value should be specified.")]
         [MinPasswordLength(6, "The Password must be at least 6 characters long.")]
-        [Display(Name = "Password")]
         [DataType(DataType.Password)]
+        [Display(Name = "Password")]        
         public string Password { get; set; }
         
 
         [Required(ErrorMessage = "The Email value should be specified.")]
         [Email(ErrorMessage = "The Email value is invalid.")]
-        [Display(Name = "Email Address")]
         [DataType(DataType.Text)]
+        [Display(Name = "Email Address")]        
         public string Email { get; set; }
+        
         [Required(ErrorMessage = "The Phone value should be specified.")]
-        [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Phone Number")]        
         public string Phone { get; set; }
 
-        [Display(Name = "Birth Date")]
         [DataType(DataType.Date)]
+        [Display(Name = "Birth Date")]        
         public DateTime BirthDate { get; set; } = new DateTime(1970, 1, 1);
 
         [DataType("ComboBox")]
